@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * This script is used to reset the project to a blank state.
+ * This script resets the project to a blank state.
  * It moves the /app, /components, /hooks, /scripts, and /constants directories to /app-example and creates a new /app directory with an index.tsx and _layout.tsx file.
  * You can remove the `reset-project` script from package.json and safely delete this file after running it.
  */
@@ -17,7 +17,7 @@ const newDirPath = path.join(root, newDir);
 
 const indexContent = `import { Text, View } from "react-native";
 
-export default function Index() {
+export default function Home() {
   return (
     <View
       style={{
@@ -26,16 +26,16 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.jsx to edit this screen.</Text>
+      <Text>Welcome to your single-screen app!</Text>
     </View>
   );
 }
 `;
 
-const layoutContent = `import { Stack } from "expo-router";
+const layoutContent = `import Home from "./index";
 
 export default function RootLayout() {
-  return <Stack />;
+  return <Home />;
 }
 `;
 
@@ -65,16 +65,16 @@ const moveDirectories = async () => {
     // Create index.tsx
     const indexPath = path.join(newAppDirPath, "index.tsx");
     await fs.promises.writeFile(indexPath, indexContent);
-    console.log("📄 app/index.jsx created.");
+    console.log("📄 app/index.tsx created.");
 
     // Create _layout.tsx
-    const layoutPath = path.join(newAppDirPath, "_layout.jsx");
+    const layoutPath = path.join(newAppDirPath, "_layout.tsx");
     await fs.promises.writeFile(layoutPath, layoutContent);
-    console.log("📄 app/_layout.jsx created.");
+    console.log("📄 app/_layout.tsx created.");
 
     console.log("\n✅ Project reset complete. Next steps:");
     console.log(
-      "1. Run `npx expo start` to start a development server.\n2. Edit app/index.jsx to edit the main screen.\n3. Delete the /app-example directory when you're done referencing it."
+      "1. Run `npx expo start` to start a development server.\n2. Edit app/index.tsx to customize your home screen.\n3. Delete the /app-example directory when you're done referencing it."
     );
   } catch (error) {
     console.error(`Error during script execution: ${error}`);

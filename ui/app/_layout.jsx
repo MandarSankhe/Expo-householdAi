@@ -30,8 +30,10 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+        <Stack.Screen name="index" options={{ headerShown: true }} />
+        <Stack.Screen name="Login" options={{ title: 'Login' }} />
+        <Stack.Screen name="EmailSignIn" options={{ title: 'Email' }} />
+        <Stack.Screen name="Questions" options={{ title: 'Questions' }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

@@ -12,11 +12,13 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as Google from 'expo-auth-session/providers/google';
 import { makeRedirectUri } from 'expo-auth-session';
 import { getAuth, signInWithCredential, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '../firebase'; // Make sure this is correctly configured
+import { auth } from './firebase';
 import { Platform } from 'react-native';
+import { useRouter } from 'expo-router';
 
-const SignUpScreen = () => {
+const Home = () => {
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     webClientId: '663909239939-5glbctcrsgan2stb37ulf9d2cpght417.apps.googleusercontent.com',
@@ -25,41 +27,15 @@ const SignUpScreen = () => {
   });
 
   useEffect(() => {
-    if (Platform.OS === 'web') {
-      // Web-specific handling
-      const url = window.location.href;
-      if (url.includes('access_token') || url.includes('id_token')) {
-        const params = new URLSearchParams(url.split('#')[1]);
-        const idToken = params.get('id_token');
-        if (idToken) {
-          const credential = GoogleAuthProvider.credential(idToken);
-          signInWithCredential(auth, credential)
-            .then((userCredential) => {
-              setUser(userCredential.user);
-              console.log('User Signed In (Web):', userCredential.user);
-            })
-            .catch((error) => {
-              console.error('Firebase Authentication Error (Web):', error);
-            });
-        }
-      }
-    } else {
-      // Native-specific handling (Expo Go on iOS/Android)
-      if (response?.type === 'success') {
-        const { id_token } = response.params;
-        if (id_token) {
-          const credential = GoogleAuthProvider.credential(id_token);
-          signInWithCredential(auth, credential)
-            .then((userCredential) => {
-              setUser(userCredential.user);
-              console.log('User Signed In (Native):', userCredential.user);
-            })
-            .catch((error) => {
-              console.error('Firebase Authentication Error (Native):', error);
-            });
-        }
-      } else if (response?.type === 'dismiss') {
-        console.error('Sign-in process was dismissed.');
+    if (response?.type === 'success') {
+      const { id_token } = response.params;
+      if (id_token) {
+        const credential = GoogleAuthProvider.credential(id_token);
+        signInWithCredential(auth, credential)
+          .then((userCredential) => {
+            setUser(userCredential.user);
+          })
+          .catch((error) => console.error('Firebase Authentication Error:', error));
       }
     }
   }, [response]);
@@ -67,22 +43,18 @@ const SignUpScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Logo */}
         <View style={styles.logoContainer}>
           <Icon name="link-variant" size={80} color="#24A19C" />
           <Text style={styles.logoText}>Household AI</Text>
         </View>
 
-        {/* Sign Up with Email Button */}
         <TouchableOpacity style={styles.emailButton}>
           <FontAwesome name="envelope" size={20} color="#FFFFFF" />
           <Text style={styles.buttonText}>Sign Up with Email</Text>
         </TouchableOpacity>
 
-        {/* Divider */}
         <Text style={styles.orText}>or</Text>
 
-        {/* Continue with Google Button */}
         <TouchableOpacity style={styles.googleButton} onPress={() => promptAsync()}>
           <Image
             source={require('@/assets/images/google-icon.png')}
@@ -91,18 +63,20 @@ const SignUpScreen = () => {
           <Text style={styles.buttonTextDark}>Continue with Google</Text>
         </TouchableOpacity>
 
-        {/* Continue as Guest Button */}
         <TouchableOpacity style={styles.guestButton}>
           <Text style={styles.buttonTextDark}>Continue as guest</Text>
         </TouchableOpacity>
 
-        {/* Login Link */}
         <Text style={styles.footerText}>
           Already have an account?{' '}
-          <Text style={styles.loginText}>Login</Text>
+          <Text
+            style={styles.loginText}
+            onPress={() => router.push('/Login')}
+          >
+            Login
+          </Text>
         </Text>
 
-        {/* Display User Info */}
         {user && (
           <View style={styles.userInfo}>
             <Text>Welcome, {user.displayName}</Text>
@@ -114,6 +88,7 @@ const SignUpScreen = () => {
     </SafeAreaView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -212,5 +187,4 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
-
-export default SignUpScreen;
+export default Home;
