@@ -23,6 +23,7 @@ const Home = () => {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     webClientId: '663909239939-5glbctcrsgan2stb37ulf9d2cpght417.apps.googleusercontent.com',
     iosClientId: '663909239939-97jguodrco7hacq1im949gtqfhhhjghd.apps.googleusercontent.com',
+    androidClientId: '663909239939-9uql8esdro3h7fko9ba44qpcd832irrk.apps.googleusercontent.com',
     redirectUri: makeRedirectUri({ useProxy: true }),
   });
 

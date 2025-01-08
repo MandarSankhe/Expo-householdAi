@@ -37,7 +37,7 @@ const EmailSignIn = () => {
       `;
   
       // Use fetch instead of axios
-      const response = await fetch('http://172.20.10.8:5000/graphql', {
+      const response = await fetch('http://10.144.127.178:5000/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
