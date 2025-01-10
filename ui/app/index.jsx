@@ -51,7 +51,8 @@ const Home = () => {
 
         <TouchableOpacity style={styles.emailButton}>
           <FontAwesome name="envelope" size={20} color="#FFFFFF" />
-          <Text style={styles.buttonText}>Sign Up with Email</Text>
+          <Text style={styles.buttonText}
+          onPress={() => router.push('/EmailSignIn')}>Sign Up with Email</Text>
         </TouchableOpacity>
 
         <Text style={styles.orText}>or</Text>
